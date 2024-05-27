@@ -12,6 +12,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.75",
+        "laravel/passport": "^10.4",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5"
     },
@@ -37,7 +38,7 @@
     },
     "scripts": {
         "start:dev": "php -S 0.0.0.0:8000 -t public",
-        "optimize": "php artisan optimize && php artisan route:cache && php artisan view:clear && php artisan config:cache",
+        "optimize": "php artisan optimize && php artisan route:cache && php artisan view:clear && php artisan config:cache && php artisan config:clear",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
