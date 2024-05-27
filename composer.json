@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
@@ -33,6 +36,8 @@
         }
     },
     "scripts": {
+        "start:dev": "php -S 0.0.0.0:8000 -t public",
+        "optimize": "php artisan optimize && php artisan route:cache && php artisan view:clear && php artisan config:cache",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -55,6 +60,7 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
+        "process-timeout": 0,
         "sort-packages": true
     },
     "minimum-stability": "dev",
