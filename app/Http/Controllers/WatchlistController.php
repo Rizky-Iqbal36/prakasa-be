@@ -121,4 +121,23 @@ class WatchlistController extends Controller
 
         return ['message' => "Operation successful"];
     }
+
+    public function delete(Request $req, $watchlist_id)
+    {
+        /** @var Authenticatable $user */
+        $user = auth()->user();
+        $user_id = $user->id;
+
+        $where_conditions = [
+            ['id', '=', $watchlist_id],
+            ['user_id', '=', $user_id]
+        ];
+        $watchlist = Watchlist::where($where_conditions)->first();
+        if (is_null($watchlist))
+            throw new NotFound('Watchlist not found');
+
+        Watchlist::where($where_conditions)->delete();
+
+        return ['message' => "Operation successful"];
+    }
 }
