@@ -31,4 +31,16 @@ class Controller extends BaseController
 
         return null;
     }
+
+    function searchValueInArray($array_to_search, $search_value)
+    {
+        $index = array_search($search_value, $array_to_search);
+        $index_type = gettype($index);
+        $data_found = $index_type === "integer";
+        return [
+            'index' => $index,
+            'index_type' => $index_type,
+            'data_found' => $data_found,
+        ];
+    }
 }
