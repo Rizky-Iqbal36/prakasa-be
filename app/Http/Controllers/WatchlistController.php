@@ -77,4 +77,48 @@ class WatchlistController extends Controller
 
         return ['message' => "Operation successful"];
     }
+
+    public function update(Request $req)
+    {
+        /** @var Authenticatable $user */
+        $user = auth()->user();
+        $user_id = $user->id;
+
+        $body = $req->json()->all();
+        $rules = [
+            'id' => 'required|integer',
+            'add' => 'nullable|array',
+            'add.*' => 'nullable|integer',
+            'remove' => 'nullable|array',
+            'remove.*' => 'nullable|integer',
+        ];
+        $queries_validator = Validator::make($body, $rules);
+        $this->validateReq($queries_validator);
+
+        $watchlist_id = $body['id'];
+        $watchlist = Watchlist::where([
+            ['id', '=', $watchlist_id],
+            ['user_id', '=', $user_id]
+        ])->first();
+
+        if (is_null($watchlist))
+            throw new NotFound("Watchlist not found");
+
+        $add_movies = $body['add'] ?? [];
+        foreach ($add_movies as $add_movie) {
+            WatchlistRelation::updateOrInsert([
+                'user_id' => $user_id,
+                'movie_id' => $add_movie,
+                'watchlist_id' => $watchlist->id
+            ]);
+        }
+        $remove_movies = $body['remove'] ?? [];
+        if (count($remove_movies) > 0)
+            WatchlistRelation::where([
+                ['watchlist_id', '=', $watchlist_id],
+                ['user_id', '=', $user_id]
+            ])->whereIn('movie_id', $remove_movies)->delete();
+
+        return ['message' => "Operation successful"];
+    }
 }
