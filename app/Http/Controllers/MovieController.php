@@ -16,7 +16,7 @@ class MovieController extends Controller
     public function __construct()
     {
         $this->middleware('passport.auth');
-        $this->middleware('role:admin', ['only' => ['list']]);
+        $this->middleware('role:admin', ['only' => ['create', 'update', 'delete']]);
         $this->DB = DB::connection('mysql');
     }
 
