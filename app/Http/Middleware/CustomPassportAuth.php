@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Http\Middleware;
 
+require_once __DIR__ . '/../../Exceptions/CustomException.php';
+
+use App\Exceptions\Unauthorized;
 use Closure;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 
 class CustomPassportAuth
@@ -20,6 +23,6 @@ class CustomPassportAuth
         if (Auth::guard('api')->check()) {
             return $next($request);
         }
-        throw new AuthenticationException("You are not allowed to access this API", $guards);
+        throw new Unauthorized("You are not allowed to access this API");
     }
 }

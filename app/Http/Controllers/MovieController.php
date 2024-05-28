@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+require_once __DIR__ . '/../../Exceptions/CustomException.php';
+
+use App\Exceptions\NotFound;
 use App\Models\Movies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,8 +38,7 @@ class MovieController extends Controller
             'thumbnail' => 'required|string',
         ];
         $queries_validator = Validator::make($body, $rules);
-        $queries_validation = $this->validateReq($queries_validator);
-        if (!is_null($queries_validation)) return $queries_validation;
+        $this->validateReq($queries_validator);
 
         $movie = Movies::create(array_merge(
             $body,
@@ -57,15 +59,13 @@ class MovieController extends Controller
             'thumbnail' => 'nullable|string',
         ];
         $queries_validator = Validator::make($body, $rules);
-        $queries_validation = $this->validateReq($queries_validator);
-        if (!is_null($queries_validation)) return $queries_validation;
+        $this->validateReq($queries_validator);
 
         $movie_id = $body['movie_id'];
         $movie = Movies::find($movie_id);
         if (is_null($movie))
-            return [
-                'message' => 'Movie not found'
-            ];
+            throw new NotFound('Movie not found');
+
         unset($body['movie_id']);
         Movies::whereId($movie_id)->update($body);
 
@@ -78,9 +78,7 @@ class MovieController extends Controller
     {
         $movie = Movies::find($movie_id);
         if (is_null($movie))
-            return [
-                'message' => 'Movie not found'
-            ];
+            throw new NotFound('Movie not found');
 
         Movies::whereId($movie_id)->delete();
         return [

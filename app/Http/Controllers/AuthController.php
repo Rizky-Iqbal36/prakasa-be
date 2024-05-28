@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+require_once __DIR__ . '/../../Exceptions/CustomException.php';
+
+use App\Exceptions\BadRequest;
 use App\Models\User;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
@@ -15,7 +18,7 @@ class AuthController extends Controller
     {
         $this->DB = DB::connection('mysql');
     }
-    
+
     public function register(Request $req)
     {
         $body = $req->json()->all();
@@ -25,8 +28,7 @@ class AuthController extends Controller
             'password' => 'required|confirmed'
         ];
         $queries_validator = Validator::make($body, $rules);
-        $queries_validation = $this->validateReq($queries_validator);
-        if(!is_null($queries_validation)) return $queries_validation;
+        $this->validateReq($queries_validator);
 
         $user = User::create([
             'name' => $body['name'],
@@ -36,7 +38,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('API Token')->accessToken;
 
-        return response([ 'user' => $user, 'token' => $token]);
+        return ['user' => $user, 'token' => $token];
     }
 
     public function login(Request $req)
@@ -47,17 +49,15 @@ class AuthController extends Controller
             'password' => 'required'
         ];
         $queries_validator = Validator::make($body, $rules);
-        $queries_validation = $this->validateReq($queries_validator);
-        if(!is_null($queries_validation)) return $queries_validation;
-        
-        if (!auth()->attempt($body)) 
-            return ['error_message' => 'Invalid email or password'];
-        
+        $this->validateReq($queries_validator);
+
+        if (!auth()->attempt($body))
+            throw new BadRequest('Invalid email or password');
+
         /** @var Authenticatable $user */
         $user = auth()->user();
         $token = $user->createToken('API Token')->accessToken;
 
         return ['user' => $user, 'token' => $token];
-
     }
 }

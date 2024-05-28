@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+require_once __DIR__ . '/../../Exceptions/CustomException.php';
+
+use App\Exceptions\BadRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -11,7 +14,7 @@ use Illuminate\Validation\Validator;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    
+
     public function validateReq(Validator $validator)
     {
         if ($validator->fails()) {
@@ -20,12 +23,10 @@ class Controller extends BaseController
             foreach ($errors->all() as $index => $error) {
                 $merged_messages .= ($index !== 0 ? " | " : "") . $error;
             }
-            return [
-                'result' => 0,
-                'desc' => 'Payload doesn\'t pass validation',
-                'reason' => $errors,
+            throw new BadRequest('Payload doesn\'t pass validation', [
                 'messages' => $merged_messages,
-            ];
+                'reason' => $errors,
+            ]);
         }
 
         return null;
