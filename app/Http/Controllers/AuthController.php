@@ -23,15 +23,18 @@ class AuthController extends Controller
     {
         $body = $req->json()->all();
         $rules = [
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed'
+            'email' => 'required|email',
+            'password' => 'required|string|min:8'
         ];
         $queries_validator = Validator::make($body, $rules);
         $this->validateReq($queries_validator);
 
+        $email = $body['email'];
+        $user = User::where('email', $email)->first();
+        if (!is_null($user))
+            throw new BadRequest("Email already registered");
+
         $user = User::create([
-            'name' => $body['name'],
             'email' => $body['email'],
             'password' => bcrypt($body['password'])
         ]);
@@ -45,8 +48,8 @@ class AuthController extends Controller
     {
         $body = $req->json()->all();
         $rules = [
-            'email' => 'email|required',
-            'password' => 'required'
+            'email' => 'required|email',
+            'password' => 'required|string|min:8'
         ];
         $queries_validator = Validator::make($body, $rules);
         $this->validateReq($queries_validator);
