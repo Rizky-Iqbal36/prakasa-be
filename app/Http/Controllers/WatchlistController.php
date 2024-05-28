@@ -31,7 +31,7 @@ class WatchlistController extends Controller
             $movie_id = $watchlist_relation['movie_id'];
             $watchlist_id = $watchlist_relation['watchlist_id'];
 
-            $movie = Movies::whereId($movie_id)->first();
+            $movie = Movies::whereId($movie_id)->select('id', 'title', 'studio')->first();
 
             $search_watchlist = $this->searchArrayOfObject($watchlist_id, 'id', $watchlist);
             if ($search_watchlist['data_found']) {
@@ -49,5 +49,32 @@ class WatchlistController extends Controller
         return [
             'watchlist' => $watchlist
         ];
+    }
+
+    public function create(Request $req)
+    {
+        /** @var Authenticatable $user */
+        $user = auth()->user();
+        $user_id = $user->id;
+
+        $body = $req->json()->all();
+        $rules = [
+            'name' => 'required|string',
+            'movies' => 'required|array|min:1',
+            'movies.*' => 'required|integer'
+        ];
+        $queries_validator = Validator::make($body, $rules);
+        $this->validateReq($queries_validator);
+
+        $watchlist = Watchlist::create(['user_id' => $user_id, 'watchlist_name' => $body['name']]);
+        foreach ($body['movies'] as $movie_id) {
+            WatchlistRelation::create([
+                'user_id' => $user_id,
+                'movie_id' => $movie_id,
+                'watchlist_id' => $watchlist->id
+            ]);
+        }
+
+        return ['message' => "Operation successful"];
     }
 }

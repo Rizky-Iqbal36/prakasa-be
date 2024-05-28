@@ -33,4 +33,5 @@ Route::prefix('movie')->group(function () {
 
 Route::prefix('watchlist')->group(function () {
     Route::get('', [WatchlistController::class, 'list']);
+    Route::post('create', [WatchlistController::class, 'create']);
 });

@@ -13,4 +13,5 @@ class Watchlist extends Model
         'user_id',
         'watchlist_name',
     ];
+    public $timestamps = false;
 }

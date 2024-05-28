@@ -14,4 +14,10 @@ class WatchlistRelation extends Model
         'movie_id',
         'watchlist_id'
     ];
+    public $timestamps = false;
+
+    public function movies()
+    {
+        return $this->hasMany(Movies::class, 'id', 'movie_id');
+    }
 }
