@@ -43,4 +43,17 @@ class Controller extends BaseController
             'data_found' => $data_found,
         ];
     }
+
+    function searchArrayOfObject($property_value, $property_name, $payloads)
+    {
+        $index = array_search($property_value, array_column($payloads, $property_name));
+        $index_type = gettype($index);
+        $data_found = $index_type === "integer";
+        return [
+            'index' => !$data_found ? -1 : $index,
+            'index_type' => $index_type,
+            'data_found' => $data_found,
+            'data' => $data_found ? $payloads[$index] : null
+        ];
+    }
 }

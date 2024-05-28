@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MovieController;
+namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,4 +29,8 @@ Route::prefix('movie')->group(function () {
     Route::post('create', [MovieController::class, 'create']);
     Route::put('update', [MovieController::class, 'update']);
     Route::delete('{movie_id}', [MovieController::class, 'delete']);
+});
+
+Route::prefix('watchlist')->group(function () {
+    Route::get('', [WatchlistController::class, 'list']);
 });
