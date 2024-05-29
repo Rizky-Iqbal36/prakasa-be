@@ -24,7 +24,7 @@ class WatchlistController extends Controller
     public function list()
     {
         /** @var Authenticatable $user */
-        $user = auth()->user();
+        $user = auth('api')->user();
 
         $watchlist = array();
         $watchlist_relations = WatchlistRelation::where('user_id', $user->id)->orderBy('watchlist_id', 'asc')->get()->toArray();
@@ -55,7 +55,7 @@ class WatchlistController extends Controller
     public function create(Request $req)
     {
         /** @var Authenticatable $user */
-        $user = auth()->user();
+        $user = auth('api')->user();
         $user_id = $user->id;
 
         $body = $req->json()->all();
@@ -82,7 +82,7 @@ class WatchlistController extends Controller
     public function update(Request $req)
     {
         /** @var Authenticatable $user */
-        $user = auth()->user();
+        $user = auth('api')->user();
         $user_id = $user->id;
 
         $body = $req->json()->all();
@@ -134,7 +134,7 @@ class WatchlistController extends Controller
     public function delete(Request $req, $watchlist_id)
     {
         /** @var Authenticatable $user */
-        $user = auth()->user();
+        $user = auth('api')->user();
         $user_id = $user->id;
 
         $where_conditions = [

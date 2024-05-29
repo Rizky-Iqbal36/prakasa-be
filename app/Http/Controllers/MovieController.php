@@ -30,7 +30,7 @@ class MovieController extends Controller
     public function create(Request $req)
     {
         /** @var Authenticatable $user */
-        $user = auth()->user();
+        $user = auth('api')->user();
 
         $body = $req->json()->all();
         $rules = [

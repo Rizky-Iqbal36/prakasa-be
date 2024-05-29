@@ -22,7 +22,7 @@ class RoleMiddleware
     public function handle($request, Closure $next, ...$roles)
     {
         /** @var Authenticatable $user */
-        $user = auth()->user();
+        $user = auth('api')->user();
 
         if (is_null($user))
             throw new Unauthorized("You are not allowed to access this API");
