@@ -27,7 +27,8 @@ class WatchlistController extends Controller
         $user = auth()->user();
 
         $watchlist = array();
-        foreach (WatchlistRelation::where('user_id', $user->id)->get()->toArray() as $watchlist_relation) {
+        $watchlist_relations = WatchlistRelation::where('user_id', $user->id)->orderBy('watchlist_id', 'asc')->get()->toArray();
+        foreach ($watchlist_relations as $watchlist_relation) {
             $movie_id = $watchlist_relation['movie_id'];
             $watchlist_id = $watchlist_relation['watchlist_id'];
 
