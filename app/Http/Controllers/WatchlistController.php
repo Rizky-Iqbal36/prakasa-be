@@ -87,6 +87,7 @@ class WatchlistController extends Controller
         $body = $req->json()->all();
         $rules = [
             'id' => 'required|integer',
+            'name' => 'nullable|string',
             'add' => 'nullable|array',
             'add.*' => 'nullable|integer',
             'remove' => 'nullable|array',
@@ -118,6 +119,13 @@ class WatchlistController extends Controller
                 ['watchlist_id', '=', $watchlist_id],
                 ['user_id', '=', $user_id]
             ])->whereIn('movie_id', $remove_movies)->delete();
+
+        $name = @$body['name'];
+        if (!is_null($name) && !empty($name))
+            Watchlist::where([
+                ['id', '=', $watchlist_id],
+                ['user_id', '=', $user_id]
+            ])->update(['watchlist_name' => $name]);
 
         return ['message' => "Operation successful"];
     }
