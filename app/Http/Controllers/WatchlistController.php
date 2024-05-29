@@ -31,7 +31,7 @@ class WatchlistController extends Controller
             $movie_id = $watchlist_relation['movie_id'];
             $watchlist_id = $watchlist_relation['watchlist_id'];
 
-            $movie = Movies::whereId($movie_id)->select('id', 'title', 'studio')->first();
+            $movie = Movies::whereId($movie_id)->select('id', 'title', 'thumbnail', 'studio')->first();
 
             $search_watchlist = $this->searchArrayOfObject($watchlist_id, 'id', $watchlist);
             if ($search_watchlist['data_found']) {
@@ -47,7 +47,7 @@ class WatchlistController extends Controller
         }
 
         return [
-            'watchlist' => $watchlist
+            'data' => $watchlist
         ];
     }
 
@@ -75,7 +75,7 @@ class WatchlistController extends Controller
             ]);
         }
 
-        return ['message' => "Operation successful"];
+        return ['data' => ["watchlist_id" => $watchlist->id]];
     }
 
     public function update(Request $req)
