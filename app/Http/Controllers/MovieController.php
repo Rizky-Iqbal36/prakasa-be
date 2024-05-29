@@ -23,7 +23,7 @@ class MovieController extends Controller
     public function list(Request $req)
     {
         return [
-            'data' => Movies::all()
+            'data' => Movies::all(['id', 'title', 'studio', 'thumbnail'])
         ];
     }
 
