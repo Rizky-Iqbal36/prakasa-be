@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 require_once __DIR__ . '/../../Exceptions/CustomException.php';
 
 use App\Exceptions\BadRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
@@ -37,6 +38,10 @@ class AuthController extends Controller
         $user = User::create([
             'email' => $body['email'],
             'password' => bcrypt($body['password'])
+        ]);
+        Role::create([
+            'user_id' => $user->id,
+            'role' => 'basic',
         ]);
 
         $token = $user->createToken('API Token')->accessToken;

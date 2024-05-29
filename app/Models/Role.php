@@ -13,6 +13,7 @@ class Role extends Model
         'user_id',
         'role',
     ];
+    public $timestamps = false;
 
     public function user()
     {
