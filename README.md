@@ -34,6 +34,11 @@ Error:
 Using laravel passport <br />
 Role permission: admin, basic
 
+Details:
+
+1. admin, can do all Operations
+2. basic, can't CRUD movies
+
 ## API Documentation
 
 See APIs documentation on [stoplight](https://iqbaldev-api-doc.stoplight.io/docs/Graphql-test-API-spec/d0f25de183e50-prakasa-excercise)
