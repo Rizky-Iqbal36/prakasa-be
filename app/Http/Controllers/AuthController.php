@@ -63,7 +63,7 @@ class AuthController extends Controller
             throw new BadRequest('Invalid email or password');
 
         /** @var Authenticatable $user */
-        $user = auth('api')->user();
+        $user = auth()->user();
         $token = $user->createToken('API Token')->accessToken;
 
         return ['user' => $user, 'token' => $token];

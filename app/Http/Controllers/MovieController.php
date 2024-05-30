@@ -68,7 +68,13 @@ class MovieController extends Controller
             throw new NotFound('Movie not found');
 
         unset($body['movie_id']);
-        Movies::whereId($movie_id)->update($body);
+        $update_payload = [];
+        foreach (['title', 'thumbnail', 'studio'] as $update_column) {
+            $update_value = @$body[$update_column] ?? '';
+            if (!empty($update_value) && strlen($update_value) > 0)
+                $update_payload[$update_column] = $update_value;
+        }
+        Movies::whereId($movie_id)->update($update_payload);
 
         return [
             'message' => "Movie updated"
